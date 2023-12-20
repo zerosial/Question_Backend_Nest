@@ -18,6 +18,11 @@ export class AppController {
     private readonly postService: PostService,
   ) {}
 
+  @Get('posts')
+  async getAllPosts(): Promise<PostModel[]> {
+    return this.postService.posts({});
+  }
+
   @Get('post/:id')
   async getPostById(@Param('id') id: string): Promise<PostModel> {
     return this.postService.post({ id: Number(id) });
