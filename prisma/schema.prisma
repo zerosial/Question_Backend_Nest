@@ -12,7 +12,8 @@ datasource db {
 }
 
 model User {
-  email     String    @id @unique
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
   inquiries Inquiry[]
 }
 
@@ -22,23 +23,37 @@ model Inquiry {
   content             String?
   questionType        QuestionType   @relation(fields: [questionTypeId], references: [id])
   questionTypeId      Int
-  questionState       String         @default("N") // Y: 답변완료, N: 답변대기
+  questionCategory    String         // 대분류 (회원정보, 카셰어링, 차량관제, 기타)
+  questionDetail      String         // 중분류 (대분류에 해당하는 중분류)
   registeredDate      DateTime       @default(now())
+  questionState       String         @default("N")
   answerRegisteredDate DateTime?
-  user                User           @relation(fields: [userEmail], references: [email])
-  userEmail           String
+  user                User           @relation(fields: [userId], references: [id])
+  userId              Int
 }
 
 model QuestionType {
   id             Int           @id @default(autoincrement())
   name           String
   inquiries      Inquiry[]
-  detailTypes    QuestionDetailType[]
 }
 
-model QuestionDetailType {
-  id             Int           @id @default(autoincrement())
-  name           String
-  questionType   QuestionType  @relation(fields: [questionTypeId], references: [id])
-  questionTypeId Int
+enum QuestionCategory {
+  MEMBER_INFO
+  CAR_SHARING
+  VEHICLE_CONTROL
+  OTHER
 }
+
+enum QuestionDetail {
+  PERSONAL_INFO_CHANGE
+  AFFILIATION_CHANGE
+  LICENSE_CARD_REGISTRATION
+  OTHER_MEMBER_INFO
+  RESERVATION_INQUIRY
+  RETURN_INQUIRY
+  PAYMENT_INQUIRY
+  DOOR_CONTROL_INQUIRY
+  OTHER
+}
+

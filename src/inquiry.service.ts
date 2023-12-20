@@ -15,8 +15,10 @@ export class InquiryService {
         questionType: {
           connect: { id: createInquiryDto.questionTypeId },
         },
+        questionCategory: createInquiryDto.questionCategory,
+        questionDetail: createInquiryDto.questionDetail,
         user: {
-          connect: { email: createInquiryDto.userEmail },
+          connect: { id: createInquiryDto.userId },
         },
       },
     });
@@ -28,7 +30,11 @@ export class InquiryService {
 
   async getInquiriesByUserEmail(email: string): Promise<Inquiry[]> {
     return this.prisma.inquiry.findMany({
-      where: { userEmail: email },
+      where: {
+        user: {
+          email: email,
+        },
+      },
     });
   }
 

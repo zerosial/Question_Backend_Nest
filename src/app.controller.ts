@@ -1,3 +1,4 @@
+import { AppService } from './app.service';
 import {
   Controller,
   Get,
@@ -21,16 +22,17 @@ import {
 @Controller()
 export class AppController {
   constructor(
+    private readonly appService: AppService,
     private readonly userService: UserService,
     private readonly inquiryService: InquiryService,
   ) {}
 
-  // User 관련 라우트
-  @Get('user/:email')
-  async getUser(@Param('email') email: string): Promise<UserModel | null> {
-    return this.userService.user({ email });
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
   }
 
+  // User 관련 라우트
   @Get('users')
   async getUsers(
     @Query('skip') skip?: number,
@@ -50,14 +52,6 @@ export class AppController {
     return this.userService.createUser(createUserDto);
   }
 
-  @Put('user/:email')
-  async updateUser(
-    @Param('email') email: string,
-    @Body() updateData: { email: string },
-  ): Promise<UserModel> {
-    return this.userService.updateUser({ where: { email }, data: updateData });
-  }
-
   @Delete('user/:email')
   async deleteUser(@Param('email') email: string): Promise<UserModel> {
     return this.userService.deleteUser({ email });
@@ -67,7 +61,7 @@ export class AppController {
   @Post('inquiry')
   async createInquiry(
     @Body() createInquiryDto: CreateInquiryDto,
-  ): Promise<InquiryModel | null> {
+  ): Promise<InquiryModel> {
     return this.inquiryService.createInquiry(createInquiryDto);
   }
 

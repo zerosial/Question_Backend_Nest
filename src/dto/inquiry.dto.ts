@@ -15,7 +15,15 @@ export class CreateInquiryDto {
 
   @IsNotEmpty()
   @IsString()
-  userEmail: string;
+  questionCategory: string;
+
+  @IsNotEmpty()
+  @IsString()
+  questionDetail: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  userId: number;
 }
 
 export class DeleteInquiryDto {
