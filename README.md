@@ -46,13 +46,19 @@ body
 GET /inquiries/user: 특정 이메일을 가진 사용자의 모든 문의 조회
 ex) https://question-pineone.koyeb.app/inquiries/user?email=zerosial@gmail.com
 
-입력: 쿼리 파라미터 email (string)
-반환: 문의 객체의 배열
 PUT /inquiry/:id: 특정 문의 업데이트
+ex) https://question-pineone.koyeb.app/inquiry/3
+body
+{
+"title": "제목입니다22",
+"content": "서브타이틀입니다.22",
+"questionCategory": "MEMBER_INFO",
+"questionDetail": "PERSONAL_INFO_CHANGE",
+"questionState": "N"
+}
 
-입력: URL 파라미터 id (number), 바디에 업데이트할 정보
-반환: 업데이트된 문의 객체
 DELETE /inquiry: 문의 삭제
-
-입력: 바디에 id (number)
-반환: 삭제된 문의 객체
+body
+{
+"id": 3
+}

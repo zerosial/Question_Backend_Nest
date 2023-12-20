@@ -54,6 +54,10 @@ export class UserService {
 
   // 사용자 삭제
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    await this.prisma.inquiry.deleteMany({
+      where: { userEmail: where.email },
+    });
+
     return this.prisma.user.delete({
       where,
     });

@@ -18,6 +18,7 @@ import {
   DeleteInquiryDto,
   GetInquiriesByEmailDto,
 } from './dto/inquiry.dto';
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -32,7 +33,20 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  // User 관련 라우트
+  // User API
+  @ApiOperation({ summary: '모든 사용자 조회' })
+  @ApiQuery({
+    name: 'skip',
+    required: false,
+    type: Number,
+    description: '건너뛸 레코드 수',
+  })
+  @ApiQuery({
+    name: 'take',
+    required: false,
+    type: Number,
+    description: '가져올 레코드 수',
+  })
   @Get('users')
   async getUsers(
     @Query('skip') skip?: number,
@@ -41,6 +55,8 @@ export class AppController {
     return this.userService.users({ skip, take });
   }
 
+  @ApiOperation({ summary: '사용자 생성' })
+  @ApiResponse({ status: 201, description: '사용자 생성됨.' })
   @Post('user')
   async createUser(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
     const existingUser = await this.userService.user({
@@ -52,12 +68,15 @@ export class AppController {
     return this.userService.createUser(createUserDto);
   }
 
+  @ApiOperation({ summary: '사용자 삭제' })
   @Delete('user/:email')
   async deleteUser(@Param('email') email: string): Promise<UserModel> {
     return this.userService.deleteUser({ email });
   }
 
-  // Inquiry 관련 라우트
+  // Inquiry API
+  @ApiOperation({ summary: '문의 생성' })
+  @ApiResponse({ status: 201, description: '문의 생성됨.' })
   @Post('inquiry')
   async createInquiry(
     @Body() createInquiryDto: CreateInquiryDto,
@@ -65,11 +84,13 @@ export class AppController {
     return this.inquiryService.createInquiry(createInquiryDto);
   }
 
+  @ApiOperation({ summary: '모든 문의 조회' })
   @Get('inquiry')
   async getAllInquiries(): Promise<InquiryModel[]> {
     return this.inquiryService.getAllInquiries();
   }
 
+  @ApiOperation({ summary: '이메일 기반 문의 조회' })
   @Get('inquiries/user')
   async getInquiriesByUserEmail(
     @Query() getInquiriesByEmailDto: GetInquiriesByEmailDto,
@@ -79,6 +100,7 @@ export class AppController {
     );
   }
 
+  @ApiOperation({ summary: '문의 업데이트' })
   @Put('inquiry/:id')
   async updateInquiry(
     @Param('id') id: string,
@@ -87,6 +109,7 @@ export class AppController {
     return this.inquiryService.updateInquiry(parseInt(id, 10), updateData);
   }
 
+  @ApiOperation({ summary: '문의 삭제' })
   @Delete('inquiry')
   async deleteInquiry(
     @Body() deleteInquiryDto: DeleteInquiryDto,
