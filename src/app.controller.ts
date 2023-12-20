@@ -17,8 +17,9 @@ import {
   CreateInquiryDto,
   DeleteInquiryDto,
   GetInquiriesByEmailDto,
+  UpdateInquiryDto,
 } from './dto/inquiry.dto';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -33,7 +34,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  // User API
+  @ApiTags('User API')
   @ApiOperation({ summary: '모든 사용자 조회' })
   @ApiQuery({
     name: 'skip',
@@ -55,6 +56,7 @@ export class AppController {
     return this.userService.users({ skip, take });
   }
 
+  @ApiTags('User API')
   @ApiOperation({ summary: '사용자 생성' })
   @ApiResponse({ status: 201, description: '사용자 생성됨.' })
   @Post('user')
@@ -68,13 +70,14 @@ export class AppController {
     return this.userService.createUser(createUserDto);
   }
 
+  @ApiTags('User API')
   @ApiOperation({ summary: '사용자 삭제' })
   @Delete('user/:email')
   async deleteUser(@Param('email') email: string): Promise<UserModel> {
     return this.userService.deleteUser({ email });
   }
 
-  // Inquiry API
+  @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 생성' })
   @ApiResponse({ status: 201, description: '문의 생성됨.' })
   @Post('inquiry')
@@ -84,12 +87,14 @@ export class AppController {
     return this.inquiryService.createInquiry(createInquiryDto);
   }
 
+  @ApiTags('Inquiry API')
   @ApiOperation({ summary: '모든 문의 조회' })
   @Get('inquiry')
   async getAllInquiries(): Promise<InquiryModel[]> {
     return this.inquiryService.getAllInquiries();
   }
 
+  @ApiTags('Inquiry API')
   @ApiOperation({ summary: '이메일 기반 문의 조회' })
   @Get('inquiries/user')
   async getInquiriesByUserEmail(
@@ -100,15 +105,16 @@ export class AppController {
     );
   }
 
+  @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 업데이트' })
   @Put('inquiry/:id')
   async updateInquiry(
     @Param('id') id: string,
-    @Body() updateData: any,
+    @Body() updateData: UpdateInquiryDto,
   ): Promise<InquiryModel> {
     return this.inquiryService.updateInquiry(parseInt(id, 10), updateData);
   }
-
+  @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 삭제' })
   @Delete('inquiry')
   async deleteInquiry(
