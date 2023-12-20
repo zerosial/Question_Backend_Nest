@@ -1,5 +1,4 @@
-import { QuestionCategory, QuestionDetail } from '@prisma/client';
-import { IsNotEmpty, IsString, IsInt, IsEmail, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsInt, IsEmail } from 'class-validator';
 
 export class CreateInquiryDto {
   @IsNotEmpty()
@@ -10,11 +9,13 @@ export class CreateInquiryDto {
   @IsString()
   content: string;
 
-  @IsEnum(QuestionCategory)
-  questionCategory: QuestionCategory;
+  @IsNotEmpty()
+  @IsString()
+  questionCategory: string;
 
-  @IsEnum(QuestionDetail)
-  questionDetail: QuestionDetail;
+  @IsNotEmpty()
+  @IsString()
+  questionDetail: string;
 
   @IsNotEmpty()
   @IsEmail()
