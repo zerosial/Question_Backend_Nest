@@ -12,13 +12,10 @@ export class InquiryService {
       data: {
         title: createInquiryDto.title,
         content: createInquiryDto.content,
-        questionType: {
-          connect: { id: createInquiryDto.questionTypeId },
-        },
         questionCategory: createInquiryDto.questionCategory,
         questionDetail: createInquiryDto.questionDetail,
         user: {
-          connect: { id: createInquiryDto.userId },
+          connect: { email: createInquiryDto.userEmail },
         },
       },
     });

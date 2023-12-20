@@ -10,10 +10,6 @@ export class CreateInquiryDto {
   content: string;
 
   @IsNotEmpty()
-  @IsInt()
-  questionTypeId: number;
-
-  @IsNotEmpty()
   @IsString()
   questionCategory: string;
 
@@ -22,8 +18,8 @@ export class CreateInquiryDto {
   questionDetail: string;
 
   @IsNotEmpty()
-  @IsInt()
-  userId: number;
+  @IsEmail()
+  userEmail: string;
 }
 
 export class DeleteInquiryDto {
