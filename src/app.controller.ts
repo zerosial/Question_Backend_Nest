@@ -11,6 +11,12 @@ import {
 import { UserService } from './user.service';
 import { InquiryService } from './inquiry.service';
 import { User as UserModel, Inquiry as InquiryModel } from '@prisma/client';
+import { CreateUserDto } from './dto/user.dto';
+import {
+  CreateInquiryDto,
+  DeleteInquiryDto,
+  GetInquiriesByEmailDto,
+} from './dto/inquiry.dto';
 
 @Controller()
 export class AppController {
@@ -34,8 +40,14 @@ export class AppController {
   }
 
   @Post('user')
-  async createUser(@Body() userData: { email: string }): Promise<UserModel> {
-    return this.userService.createUser(userData);
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
+    const existingUser = await this.userService.user({
+      email: createUserDto.email,
+    });
+    if (existingUser) {
+      throw new Error('이미 존재하는 이메일입니다.');
+    }
+    return this.userService.createUser(createUserDto);
   }
 
   @Put('user/:email')
@@ -53,20 +65,24 @@ export class AppController {
 
   // Inquiry 관련 라우트
   @Post('inquiry')
-  async createInquiry(@Body() inquiryData: any): Promise<InquiryModel> {
-    return this.inquiryService.createInquiry(inquiryData);
+  async createInquiry(
+    @Body() createInquiryDto: CreateInquiryDto,
+  ): Promise<InquiryModel | null> {
+    return this.inquiryService.createInquiry(createInquiryDto);
   }
 
-  @Get('inquiry/:id')
-  async getInquiryById(@Param('id') id: number): Promise<InquiryModel | null> {
-    return this.inquiryService.getInquiryById(id);
+  @Get('inquiry')
+  async getAllInquiries(): Promise<InquiryModel[]> {
+    return this.inquiryService.getAllInquiries();
   }
 
-  @Get('inquiries/user/:email')
+  @Get('inquiries/user')
   async getInquiriesByUserEmail(
-    @Param('email') email: string,
+    @Query() getInquiriesByEmailDto: GetInquiriesByEmailDto,
   ): Promise<InquiryModel[]> {
-    return this.inquiryService.getInquiriesByUserEmail(email);
+    return this.inquiryService.getInquiriesByUserEmail(
+      getInquiriesByEmailDto.email,
+    );
   }
 
   @Put('inquiry/:id')
@@ -77,10 +93,10 @@ export class AppController {
     return this.inquiryService.updateInquiry(id, updateData);
   }
 
-  @Delete('inquiry/:id')
-  async deleteInquiry(@Param('id') id: number): Promise<InquiryModel> {
-    return this.inquiryService.deleteInquiry(id);
+  @Delete('inquiry')
+  async deleteInquiry(
+    @Body() deleteInquiryDto: DeleteInquiryDto,
+  ): Promise<InquiryModel> {
+    return this.inquiryService.deleteInquiry(deleteInquiryDto);
   }
-
-  // 여기에 필요한 추가 라우트를 구현할 수 있습니다.
 }

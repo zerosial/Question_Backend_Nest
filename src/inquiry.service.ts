@@ -1,21 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Inquiry, Prisma } from '@prisma/client';
+import { CreateInquiryDto, DeleteInquiryDto } from './dto/inquiry.dto';
 
 @Injectable()
 export class InquiryService {
   constructor(private prisma: PrismaService) {}
 
-  async createInquiry(data: Prisma.InquiryCreateInput): Promise<Inquiry> {
+  async createInquiry(createInquiryDto: CreateInquiryDto): Promise<Inquiry> {
     return this.prisma.inquiry.create({
-      data,
+      data: {
+        title: createInquiryDto.title,
+        content: createInquiryDto.content,
+        questionType: {
+          connect: { id: createInquiryDto.questionTypeId },
+        },
+        user: {
+          connect: { email: createInquiryDto.userEmail },
+        },
+      },
     });
   }
 
-  async getInquiryById(id: number): Promise<Inquiry | null> {
-    return this.prisma.inquiry.findUnique({
-      where: { id },
-    });
+  async getAllInquiries(): Promise<Inquiry[]> {
+    return this.prisma.inquiry.findMany();
   }
 
   async getInquiriesByUserEmail(email: string): Promise<Inquiry[]> {
@@ -34,11 +42,9 @@ export class InquiryService {
     });
   }
 
-  async deleteInquiry(id: number): Promise<Inquiry> {
+  async deleteInquiry(deleteInquiryDto: DeleteInquiryDto): Promise<Inquiry> {
     return this.prisma.inquiry.delete({
-      where: { id },
+      where: { id: deleteInquiryDto.id },
     });
   }
-
-  // 여기에 추가적인 1:1 문의 관련 메소드를 구현할 수 있습니다.
 }
