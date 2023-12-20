@@ -81,10 +81,10 @@ export class AppController {
 
   @Put('inquiry/:id')
   async updateInquiry(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateData: any,
   ): Promise<InquiryModel> {
-    return this.inquiryService.updateInquiry(id, updateData);
+    return this.inquiryService.updateInquiry(parseInt(id, 10), updateData);
   }
 
   @Delete('inquiry')
