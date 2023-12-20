@@ -12,17 +12,33 @@ datasource db {
 }
 
 model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  name  String?
-  posts Post[]
+  email     String    @id @unique
+  inquiries Inquiry[]
 }
 
-model Post {
-  id        Int      @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model Inquiry {
+  id                  Int            @id @default(autoincrement())
+  title               String
+  content             String?
+  questionType        QuestionType   @relation(fields: [questionTypeId], references: [id])
+  questionTypeId      Int
+  questionState       String         @default("N") // Y: 답변완료, N: 답변대기
+  registeredDate      DateTime       @default(now())
+  answerRegisteredDate DateTime?
+  user                User           @relation(fields: [userEmail], references: [email])
+  userEmail           String
+}
+
+model QuestionType {
+  id             Int           @id @default(autoincrement())
+  name           String
+  inquiries      Inquiry[]
+  detailTypes    QuestionDetailType[]
+}
+
+model QuestionDetailType {
+  id             Int           @id @default(autoincrement())
+  name           String
+  questionType   QuestionType  @relation(fields: [questionTypeId], references: [id])
+  questionTypeId Int
 }

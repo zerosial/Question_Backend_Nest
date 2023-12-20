@@ -1,89 +1,86 @@
 import {
   Controller,
   Get,
-  Param,
   Post,
   Body,
+  Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { PostService } from './post.service';
-import { User as UserModel, Post as PostModel } from '@prisma/client';
+import { InquiryService } from './inquiry.service';
+import { User as UserModel, Inquiry as InquiryModel } from '@prisma/client';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly userService: UserService,
-    private readonly postService: PostService,
+    private readonly inquiryService: InquiryService,
   ) {}
 
-  @Get('posts')
-  async getAllPosts(): Promise<PostModel[]> {
-    return this.postService.posts({});
+  // User 관련 라우트
+  @Get('user/:email')
+  async getUser(@Param('email') email: string): Promise<UserModel | null> {
+    return this.userService.user({ email });
   }
 
-  @Get('post/:id')
-  async getPostById(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.post({ id: Number(id) });
-  }
-
-  @Get('feed')
-  async getPublishedPosts(): Promise<PostModel[]> {
-    return this.postService.posts({
-      where: { published: true },
-    });
-  }
-
-  @Get('filtered-posts/:searchString')
-  async getFilteredPosts(
-    @Param('searchString') searchString: string,
-  ): Promise<PostModel[]> {
-    return this.postService.posts({
-      where: {
-        OR: [
-          {
-            title: { contains: searchString },
-          },
-          {
-            content: { contains: searchString },
-          },
-        ],
-      },
-    });
-  }
-
-  @Post('post')
-  async createDraft(
-    @Body() postData: { title: string; content?: string; authorEmail: string },
-  ): Promise<PostModel> {
-    const { title, content, authorEmail } = postData;
-    return this.postService.createPost({
-      title,
-      content,
-      author: {
-        connect: { email: authorEmail },
-      },
-    });
+  @Get('users')
+  async getUsers(
+    @Query('skip') skip?: number,
+    @Query('take') take?: number,
+  ): Promise<UserModel[]> {
+    return this.userService.users({ skip, take });
   }
 
   @Post('user')
-  async signupUser(
-    @Body() userData: { name?: string; email: string },
-  ): Promise<UserModel> {
+  async createUser(@Body() userData: { email: string }): Promise<UserModel> {
     return this.userService.createUser(userData);
   }
 
-  @Put('publish/:id')
-  async publishPost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.updatePost({
-      where: { id: Number(id) },
-      data: { published: true },
-    });
+  @Put('user/:email')
+  async updateUser(
+    @Param('email') email: string,
+    @Body() updateData: { email: string },
+  ): Promise<UserModel> {
+    return this.userService.updateUser({ where: { email }, data: updateData });
   }
 
-  @Delete('post/:id')
-  async deletePost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.deletePost({ id: Number(id) });
+  @Delete('user/:email')
+  async deleteUser(@Param('email') email: string): Promise<UserModel> {
+    return this.userService.deleteUser({ email });
   }
+
+  // Inquiry 관련 라우트
+  @Post('inquiry')
+  async createInquiry(@Body() inquiryData: any): Promise<InquiryModel> {
+    return this.inquiryService.createInquiry(inquiryData);
+  }
+
+  @Get('inquiry/:id')
+  async getInquiryById(@Param('id') id: number): Promise<InquiryModel | null> {
+    return this.inquiryService.getInquiryById(id);
+  }
+
+  @Get('inquiries/user/:email')
+  async getInquiriesByUserEmail(
+    @Param('email') email: string,
+  ): Promise<InquiryModel[]> {
+    return this.inquiryService.getInquiriesByUserEmail(email);
+  }
+
+  @Put('inquiry/:id')
+  async updateInquiry(
+    @Param('id') id: number,
+    @Body() updateData: any,
+  ): Promise<InquiryModel> {
+    return this.inquiryService.updateInquiry(id, updateData);
+  }
+
+  @Delete('inquiry/:id')
+  async deleteInquiry(@Param('id') id: number): Promise<InquiryModel> {
+    return this.inquiryService.deleteInquiry(id);
+  }
+
+  // 여기에 필요한 추가 라우트를 구현할 수 있습니다.
 }
