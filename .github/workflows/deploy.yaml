@@ -18,11 +18,3 @@ jobs:
         uses: koyeb-community/install-koyeb-cli@v2
         with:
           api_token: '${{ secrets.KOYEB_EXAMPLES_APPS_TOKEN }}'
-
-      - name: Build and deploy the application
-        uses: koyeb/action-git-deploy@v1
-        with:
-          app-name: question
-          service-ports: '3000:http'
-          service-routes: '/:3000'
-          service-env: 'PORT=3000'
