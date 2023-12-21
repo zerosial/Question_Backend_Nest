@@ -22,7 +22,7 @@ jobs:
       - name: Build and deploy the application
         uses: koyeb/action-git-deploy@v1
         with:
-          app-name: question-backend-nest
+          app-name: question
           service-ports: '3000:http'
           service-routes: '/:3000'
           service-env: 'PORT=3000'
