@@ -4,6 +4,7 @@ import {
   IsInt,
   IsEmail,
   IsOptional,
+  IsIn,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -20,32 +21,29 @@ export class CreateInquiryDto {
 
   @ApiProperty({
     description: '문의 대분류',
-    example: [
-      'MEMBER_INFO (회원 정보)',
-      'CAR_SHARING (카셰어링)',
-      'VEHICLE_CONTROL (차량 관제)',
-      'OTHER (기타)',
-    ],
+    example: 'MEMBER_INFO',
   })
   @IsNotEmpty()
   @IsString()
+  @IsIn(['MEMBER_INFO', 'CAR_SHARING', 'VEHICLE_CONTROL', 'OTHER'])
   questionCategory: string;
 
   @ApiProperty({
     description: '문의 세부 분류',
-    example: [
-      'PERSONAL_INFO_CHANGE (개인정보 변경)',
-      'AFFILIATION_CHANGE (소속 변경)',
-      'LICENSE_CARD_REGISTRATION (면허/카드 등록)',
-      'RESERVATION_INQUIRY (예약 문의)',
-      'RETURN_INQUIRY (반납 문의)',
-      'PAYMENT_INQUIRY (결제 문의)',
-      'DOOR_CONTROL_INQUIRY (도어 제어 문의)',
-      'OTHER (기타)',
-    ],
+    example: 'PERSONAL_INFO_CHANGE',
   })
   @IsNotEmpty()
   @IsString()
+  @IsIn([
+    'PERSONAL_INFO_CHANGE',
+    'AFFILIATION_CHANGE',
+    'LICENSE_CARD_REGISTRATION',
+    'RESERVATION_INQUIRY',
+    'RETURN_INQUIRY',
+    'PAYMENT_INQUIRY',
+    'DOOR_CONTROL_INQUIRY',
+    'OTHER',
+  ])
   questionDetail: string;
 
   @ApiProperty({ example: 'user@example.com', description: '사용자 이메일' })
@@ -90,44 +88,32 @@ export class UpdateInquiryDto {
 
   @ApiProperty({
     description: '문의 대분류',
-    example: [
-      'MEMBER_INFO (회원 정보)',
-      'CAR_SHARING (카셰어링)',
-      'VEHICLE_CONTROL (차량 관제)',
-      'OTHER (기타)',
-    ],
+    example: 'MEMBER_INFO',
     required: false,
   })
   @IsOptional()
   @IsString()
+  @IsIn(['MEMBER_INFO', 'CAR_SHARING', 'VEHICLE_CONTROL', 'OTHER'])
   questionCategory?: string;
 
   @ApiProperty({
     description: '문의 세부 분류',
-    example: [
-      'PERSONAL_INFO_CHANGE (개인정보 변경)',
-      'AFFILIATION_CHANGE (소속 변경)',
-      'LICENSE_CARD_REGISTRATION (면허/카드 등록)',
-      'RESERVATION_INQUIRY (예약 문의)',
-      'RETURN_INQUIRY (반납 문의)',
-      'PAYMENT_INQUIRY (결제 문의)',
-      'DOOR_CONTROL_INQUIRY (도어 제어 문의)',
-      'OTHER (기타)',
-    ],
+    example: 'PERSONAL_INFO_CHANGE',
     required: false,
   })
   @IsOptional()
   @IsString()
+  @IsIn([
+    'PERSONAL_INFO_CHANGE',
+    'AFFILIATION_CHANGE',
+    'LICENSE_CARD_REGISTRATION',
+    'RESERVATION_INQUIRY',
+    'RETURN_INQUIRY',
+    'PAYMENT_INQUIRY',
+    'DOOR_CONTROL_INQUIRY',
+    'OTHER',
+  ])
   questionDetail?: string;
-
-  @ApiProperty({
-    example: 'Y/N',
-    description: '답변/미답변 상태',
-    required: false,
-  })
-  @IsOptional()
-  @IsEmail()
-  questionState?: string;
 
   @ApiProperty({
     example: 'user@example.com',
