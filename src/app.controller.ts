@@ -8,6 +8,8 @@ import {
   Put,
   Delete,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { InquiryService } from './inquiry.service';
@@ -72,7 +74,10 @@ export class AppController {
       email: createUserDto.email,
     });
     if (existingUser) {
-      throw new Error('이미 존재하는 이메일입니다.');
+      throw new HttpException(
+        '이미 존재하는 이메일입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return this.userService.createUser(createUserDto);
   }
@@ -81,6 +86,15 @@ export class AppController {
   @ApiOperation({ summary: '사용자 삭제' })
   @Delete('user/:email')
   async deleteUser(@Param('email') email: string): Promise<UserModel> {
+    const existingUser = await this.userService.user({
+      email,
+    });
+    if (!existingUser) {
+      throw new HttpException(
+        '메일이 존제하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return this.userService.deleteUser({ email });
   }
 
@@ -107,6 +121,15 @@ export class AppController {
   async getInquiriesByUserEmail(
     @Query() getInquiriesByEmailDto: GetInquiriesByEmailDto,
   ): Promise<InquiryModel[]> {
+    const existingUser = await this.userService.user({
+      email: getInquiriesByEmailDto.email,
+    });
+    if (!existingUser) {
+      throw new HttpException(
+        '메일이 존제하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return this.inquiryService.getInquiriesByUserEmail(
       getInquiriesByEmailDto.email,
     );
@@ -119,7 +142,15 @@ export class AppController {
     @Param('id') id: string,
     @Body() updateData: UpdateInquiryDto,
   ): Promise<InquiryModel> {
-    return this.inquiryService.updateInquiry(parseInt(id, 10), updateData);
+    const numId = parseInt(id, 10);
+    const existingInquiry = await this.inquiryService.getAllInquiries();
+    if (!existingInquiry.some((inquiry) => inquiry.id === numId)) {
+      throw new HttpException(
+        '해당 문의사항의 존재하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.inquiryService.updateInquiry(numId, updateData);
   }
 
   @ApiTags('Inquiry API')
