@@ -22,7 +22,18 @@ export class InquiryService {
   }
 
   async getAllInquiries(): Promise<Inquiry[]> {
-    return this.prisma.inquiry.findMany();
+    return this.prisma.inquiry.findMany({
+      include: {
+        answer: {
+          select: {
+            isAnswer: true,
+            title: true,
+            content: true,
+            answeredDate: true,
+          },
+        },
+      },
+    });
   }
 
   async getInquiriesByUserEmail(email: string): Promise<Inquiry[]> {
@@ -30,6 +41,16 @@ export class InquiryService {
       where: {
         user: {
           email: email,
+        },
+      },
+      include: {
+        answer: {
+          select: {
+            isAnswer: true,
+            title: true,
+            content: true,
+            answeredDate: true,
+          },
         },
       },
     });

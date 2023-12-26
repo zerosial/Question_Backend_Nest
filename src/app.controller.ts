@@ -11,7 +11,11 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { InquiryService } from './inquiry.service';
-import { User as UserModel, Inquiry as InquiryModel } from '@prisma/client';
+import {
+  User as UserModel,
+  Inquiry as InquiryModel,
+  Answer as AnswerModel,
+} from '@prisma/client';
 import { CreateUserDto } from './dto/user.dto';
 import {
   CreateInquiryDto,
@@ -20,6 +24,8 @@ import {
   UpdateInquiryDto,
 } from './dto/inquiry.dto';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateAnswerDto } from './dto/answer.dto';
+import { AnswerService } from './answer.service';
 
 @Controller()
 export class AppController {
@@ -27,6 +33,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly userService: UserService,
     private readonly inquiryService: InquiryService,
+    private readonly answerService: AnswerService,
   ) {}
 
   @Get()
@@ -114,6 +121,7 @@ export class AppController {
   ): Promise<InquiryModel> {
     return this.inquiryService.updateInquiry(parseInt(id, 10), updateData);
   }
+
   @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 삭제' })
   @Delete('inquiry')
@@ -121,5 +129,15 @@ export class AppController {
     @Body() deleteInquiryDto: DeleteInquiryDto,
   ): Promise<InquiryModel> {
     return this.inquiryService.deleteInquiry(deleteInquiryDto);
+  }
+
+  @ApiTags('Answer API')
+  @ApiOperation({ summary: '답변 생성' })
+  @ApiResponse({ status: 201, description: '답변 생성됨.' })
+  @Post('answer')
+  async createAnswer(
+    @Body() createAnswerDto: CreateAnswerDto,
+  ): Promise<AnswerModel> {
+    return this.answerService.createAnswer(createAnswerDto);
   }
 }

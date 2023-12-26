@@ -1,56 +1,37 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
-//datasource db {
-//  provider  = "postgresql"
-//  url        = env("DATABASE_URL")
-//  directUrl = env("DIRECT_URL")
-//}
-
 datasource db {
   provider  = "postgresql"
-  url        = env("DATABASE_URL_ELEPHANT")
+  url       = env("DATABASE_URL_ELEPHANT")
   directUrl = env("DIRECT_URL_ELEPHANT")
 }
 
+model Inquiry {
+  id               Int      @id @default(autoincrement())
+  title            String
+  content          String?
+  questionCategory String
+  questionDetail   String
+  registeredDate   DateTime @default(now())
+  userEmail        String
+  user             User     @relation(fields: [userEmail], references: [email])
+  answer           Answer?
+}
+
+model Answer {
+  id           Int      @id @default(autoincrement())
+  isAnswer     Boolean  @default(false)
+  title        String   @default("")
+  content      String   @default("")
+  answeredDate DateTime @default(now())
+  inquiryId    Int      @unique
+  inquiry      Inquiry  @relation(fields: [inquiryId], references: [id])
+}
+
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   inquiries Inquiry[]
 }
-
-model Inquiry {
-  id                  Int            @id @default(autoincrement())
-  title               String
-  content             String?
-  questionCategory    String         // 대분류 (회원정보, 카셰어링, 차량관제, 기타)
-  questionDetail      String         // 중분류 (대분류에 해당하는 중분류)
-  registeredDate      DateTime       @default(now())
-  user                User           @relation(fields: [userEmail], references: [email])
-  userEmail           String
-}
-
-
-enum QuestionCategory {
-  MEMBER_INFO
-  CAR_SHARING
-  VEHICLE_CONTROL
-  OTHER
-}
-
-enum QuestionDetail {
-  PERSONAL_INFO_CHANGE
-  AFFILIATION_CHANGE
-  LICENSE_CARD_REGISTRATION
-  OTHER_MEMBER_INFO
-  RESERVATION_INQUIRY
-  RETURN_INQUIRY
-  PAYMENT_INQUIRY
-  DOOR_CONTROL_INQUIRY
-  OTHER
-}
-
