@@ -50,8 +50,6 @@ export class CreateInquiryDto {
   @IsNotEmpty()
   @IsEmail()
   userEmail: string;
-
-  answer: any;
 }
 
 export class DeleteInquiryDto {

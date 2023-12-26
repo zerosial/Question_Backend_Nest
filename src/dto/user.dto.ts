@@ -4,6 +4,6 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 export class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()
-  @ApiProperty({ description: '사용자 이메일' })
+  @ApiProperty({ example: 'user@example.com', description: '사용자 이메일' })
   email: string;
 }
