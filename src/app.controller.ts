@@ -170,10 +170,19 @@ export class AppController {
   @ApiTags('Answer API')
   @ApiOperation({ summary: '답변 생성' })
   @ApiResponse({ status: 201, description: '답변 생성됨.' })
-  @Post('answer')
+  @Post('answer/:id')
   async createAnswer(
+    @Param('id') id: string,
     @Body() createAnswerDto: CreateAnswerDto,
   ): Promise<AnswerModel> {
-    return this.answerService.createAnswer(createAnswerDto);
+    const numId = parseInt(id, 10);
+    const existingInquiry = await this.inquiryService.getAllInquiries();
+    if (!existingInquiry.some((inquiry) => inquiry.id === numId)) {
+      throw new HttpException(
+        '해당 문의사항의 존재하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.answerService.createAnswer(numId, createAnswerDto);
   }
 }

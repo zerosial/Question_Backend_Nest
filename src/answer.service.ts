@@ -7,7 +7,10 @@ import { CreateAnswerDto } from './dto/answer.dto';
 export class AnswerService {
   constructor(private prisma: PrismaService) {}
 
-  async createAnswer(createAnswerDto: CreateAnswerDto): Promise<Answer> {
+  async createAnswer(
+    id: number,
+    createAnswerDto: CreateAnswerDto,
+  ): Promise<Answer> {
     return this.prisma.answer.create({
       data: {
         title: createAnswerDto.title,
@@ -15,7 +18,7 @@ export class AnswerService {
         isAnswer: true,
         answeredDate: new Date(),
         inquiry: {
-          connect: { id: createAnswerDto.inquiryId },
+          connect: { id },
         },
       },
     });
