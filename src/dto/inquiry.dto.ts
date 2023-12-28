@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   IsString,
-  IsInt,
   IsEmail,
   IsOptional,
   IsIn,
@@ -50,12 +49,6 @@ export class CreateInquiryDto {
   @IsNotEmpty()
   @IsEmail()
   userEmail: string;
-}
-
-export class DeleteInquiryDto {
-  @ApiProperty({ example: 1, description: '문의 ID' })
-  @IsInt()
-  id: number;
 }
 
 export class GetInquiriesByEmailDto {

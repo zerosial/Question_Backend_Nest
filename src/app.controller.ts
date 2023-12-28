@@ -21,7 +21,6 @@ import {
 import { CreateUserDto } from './dto/user.dto';
 import {
   CreateInquiryDto,
-  DeleteInquiryDto,
   GetInquiriesByEmailDto,
   UpdateInquiryDto,
 } from './dto/inquiry.dto';
@@ -155,11 +154,17 @@ export class AppController {
 
   @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 삭제' })
-  @Delete('inquiry')
-  async deleteInquiry(
-    @Body() deleteInquiryDto: DeleteInquiryDto,
-  ): Promise<InquiryModel> {
-    return this.inquiryService.deleteInquiry(deleteInquiryDto);
+  @Delete('inquiry/:id')
+  async deleteInquiry(@Param('id') id: string): Promise<InquiryModel> {
+    const numId = parseInt(id, 10);
+    const existingInquiry = await this.inquiryService.getAllInquiries();
+    if (!existingInquiry.some((inquiry) => inquiry.id === numId)) {
+      throw new HttpException(
+        '해당 문의사항의 존재하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.inquiryService.deleteInquiry(numId);
   }
 
   @ApiTags('Answer API')

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Inquiry, Prisma } from '@prisma/client';
-import { CreateInquiryDto, DeleteInquiryDto } from './dto/inquiry.dto';
+import { CreateInquiryDto } from './dto/inquiry.dto';
 
 @Injectable()
 export class InquiryService {
@@ -66,9 +66,9 @@ export class InquiryService {
     });
   }
 
-  async deleteInquiry(deleteInquiryDto: DeleteInquiryDto): Promise<Inquiry> {
+  async deleteInquiry(id: number): Promise<Inquiry> {
     return this.prisma.inquiry.delete({
-      where: { id: deleteInquiryDto.id },
+      where: { id },
     });
   }
 }
