@@ -8,7 +8,7 @@ export class AnswerService {
   constructor(private prisma: PrismaService) {}
 
   async createAnswer(
-    id: number,
+    inquiryId: number,
     createAnswerDto: CreateAnswerDto,
   ): Promise<Answer> {
     return this.prisma.answer.create({
@@ -18,9 +18,21 @@ export class AnswerService {
         isAnswer: true,
         answeredDate: new Date(),
         inquiry: {
-          connect: { id },
+          connect: { id: inquiryId },
         },
       },
+    });
+  }
+
+  async deleteAnswer(answerId: number): Promise<Answer> {
+    return this.prisma.answer.delete({
+      where: { id: answerId },
+    });
+  }
+
+  async findAnswerById(answerId: number): Promise<Answer | null> {
+    return this.prisma.answer.findUnique({
+      where: { id: answerId },
     });
   }
 }

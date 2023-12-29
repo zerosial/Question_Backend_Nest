@@ -136,12 +136,12 @@ export class AppController {
 
   @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 업데이트' })
-  @Put('inquiry/:id')
+  @Put('inquiry/:inquiryId')
   async updateInquiry(
-    @Param('id') id: string,
+    @Param('inquiryId') inquiryId: string,
     @Body() updateData: UpdateInquiryDto,
   ): Promise<InquiryModel> {
-    const numId = parseInt(id, 10);
+    const numId = parseInt(inquiryId, 10);
     const existingInquiry = await this.inquiryService.findInquiryById(numId);
     if (!existingInquiry) {
       throw new HttpException(
@@ -154,9 +154,11 @@ export class AppController {
 
   @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 삭제' })
-  @Delete('inquiry/:id')
-  async deleteInquiry(@Param('id') id: string): Promise<InquiryModel> {
-    const numId = parseInt(id, 10);
+  @Delete('inquiry/:inquiryId')
+  async deleteInquiry(
+    @Param('inquiryId') inquiryId: string,
+  ): Promise<InquiryModel> {
+    const numId = parseInt(inquiryId, 10);
     const existingInquiry = await this.inquiryService.findInquiryById(numId);
     const inquiryWithAnswer = existingInquiry as InquiryModel & {
       answer: AnswerModel | null;
@@ -176,19 +178,18 @@ export class AppController {
       );
     }
 
-    console.log('existingInquiry', existingInquiry);
     return this.inquiryService.deleteInquiry(numId);
   }
 
   @ApiTags('Answer API')
   @ApiOperation({ summary: '답변 생성' })
   @ApiResponse({ status: 201, description: '답변 생성됨.' })
-  @Post('answer/:id')
+  @Post('answer/:inquiryId')
   async createAnswer(
-    @Param('id') id: string,
+    @Param('inquiryId') inquiryId: string,
     @Body() createAnswerDto: CreateAnswerDto,
   ): Promise<AnswerModel> {
-    const numId = parseInt(id, 10);
+    const numId = parseInt(inquiryId, 10);
     const existingInquiry = await this.inquiryService.findInquiryById(numId);
     if (!existingInquiry) {
       throw new HttpException(
@@ -198,5 +199,24 @@ export class AppController {
     }
 
     return this.answerService.createAnswer(numId, createAnswerDto);
+  }
+
+  @ApiTags('Answer API')
+  @ApiOperation({ summary: '답변 삭제' })
+  @ApiResponse({ status: 200, description: '답변 삭제됨.' })
+  @Delete('answer/:answerId')
+  async deleteAnswer(
+    @Param('answerId') answerId: string,
+  ): Promise<AnswerModel> {
+    const numId = parseInt(answerId, 10);
+    const existingAnswer = await this.answerService.findAnswerById(numId);
+    if (!existingAnswer) {
+      throw new HttpException(
+        '해당 답변이 존재하지 않습니다.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return this.answerService.deleteAnswer(numId);
   }
 }

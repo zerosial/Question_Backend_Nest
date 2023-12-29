@@ -26,6 +26,7 @@ export class InquiryService {
       include: {
         answer: {
           select: {
+            id: true,
             isAnswer: true,
             title: true,
             content: true,
@@ -57,18 +58,18 @@ export class InquiryService {
   }
 
   async updateInquiry(
-    id: number,
+    inquiryId: number,
     data: Prisma.InquiryUpdateInput,
   ): Promise<Inquiry> {
     return this.prisma.inquiry.update({
-      where: { id },
+      where: { id: inquiryId },
       data,
     });
   }
 
-  async deleteInquiry(id: number): Promise<Inquiry> {
+  async deleteInquiry(inquiryId: number): Promise<Inquiry> {
     return this.prisma.inquiry.delete({
-      where: { id },
+      where: { id: inquiryId },
     });
   }
 
