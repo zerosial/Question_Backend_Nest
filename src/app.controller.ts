@@ -142,8 +142,8 @@ export class AppController {
     @Body() updateData: UpdateInquiryDto,
   ): Promise<InquiryModel> {
     const numId = parseInt(id, 10);
-    const existingInquiry = await this.inquiryService.getAllInquiries();
-    if (!existingInquiry.some((inquiry) => inquiry.id === numId)) {
+    const existingInquiry = await this.inquiryService.findInquiryById(numId);
+    if (!existingInquiry) {
       throw new HttpException(
         '해당 문의사항의 존재하지 않습니다.',
         HttpStatus.BAD_REQUEST,
@@ -157,13 +157,26 @@ export class AppController {
   @Delete('inquiry/:id')
   async deleteInquiry(@Param('id') id: string): Promise<InquiryModel> {
     const numId = parseInt(id, 10);
-    const existingInquiry = await this.inquiryService.getAllInquiries();
-    if (!existingInquiry.some((inquiry) => inquiry.id === numId)) {
+    const existingInquiry = await this.inquiryService.findInquiryById(numId);
+    const inquiryWithAnswer = existingInquiry as InquiryModel & {
+      answer: AnswerModel | null;
+    };
+
+    if (!inquiryWithAnswer) {
       throw new HttpException(
-        '해당 문의사항의 존재하지 않습니다.',
+        '해당 문의사항이 존재하지 않습니다.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (inquiryWithAnswer.answer) {
+      throw new HttpException(
+        '연관된 답변이 있는 문의사항은 삭제할 수 없습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
+
+    console.log('existingInquiry', existingInquiry);
     return this.inquiryService.deleteInquiry(numId);
   }
 
@@ -176,13 +189,14 @@ export class AppController {
     @Body() createAnswerDto: CreateAnswerDto,
   ): Promise<AnswerModel> {
     const numId = parseInt(id, 10);
-    const existingInquiry = await this.inquiryService.getAllInquiries();
-    if (!existingInquiry.some((inquiry) => inquiry.id === numId)) {
+    const existingInquiry = await this.inquiryService.findInquiryById(numId);
+    if (!existingInquiry) {
       throw new HttpException(
         '해당 문의사항의 존재하지 않습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
+
     return this.answerService.createAnswer(numId, createAnswerDto);
   }
 }
