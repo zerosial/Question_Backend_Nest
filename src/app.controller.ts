@@ -56,12 +56,23 @@ export class AppController {
     type: Number,
     description: '가져올 레코드 수',
   })
+  @ApiQuery({
+    name: 'email',
+    required: false,
+    type: String,
+    description: '검색할 이메일',
+  })
   @Get('users')
   async getUsers(
     @Query('skip') skip?: number,
     @Query('take') take?: number,
+    @Query('email') email?: string,
   ): Promise<UserModel[]> {
-    return this.userService.users({ skip, take });
+    return this.userService.users({
+      skip,
+      take,
+      where: email ? { email } : {},
+    });
   }
 
   @ApiTags('User API')
