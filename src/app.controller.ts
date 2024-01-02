@@ -116,7 +116,7 @@ export class AppController {
 
   @ApiTags('Inquiry API')
   @ApiOperation({ summary: '이메일 기반 문의 조회' })
-  @Get('inquiries/user')
+  @Get('inquiry/user')
   async getInquiriesByUserEmail(
     @Query() getInquiriesByEmailDto: GetInquiriesByEmailDto,
   ): Promise<InquiryModel[]> {
