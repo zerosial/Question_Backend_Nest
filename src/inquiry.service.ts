@@ -76,7 +76,16 @@ export class InquiryService {
   async findInquiryById(id: number): Promise<Inquiry | null> {
     return this.prisma.inquiry.findUnique({
       where: { id },
-      include: { answer: true },
+      include: {
+        answer: {
+          select: {
+            isAnswer: true,
+            title: true,
+            content: true,
+            answeredDate: true,
+          },
+        },
+      },
     });
   }
 }

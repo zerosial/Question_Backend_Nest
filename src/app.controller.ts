@@ -146,6 +146,23 @@ export class AppController {
   }
 
   @ApiTags('Inquiry API')
+  @ApiOperation({ summary: 'ID 기반 문의 조회' })
+  @Get('inquiry/:inquiryId')
+  async findInquiryById(
+    @Param('inquiryId') inquiryId: string,
+  ): Promise<InquiryModel> {
+    const numId = parseInt(inquiryId, 10);
+    const inquiry = await this.inquiryService.findInquiryById(numId);
+    if (!inquiry) {
+      throw new HttpException(
+        '해당 ID의 문의사항이 존재하지 않습니다.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return inquiry;
+  }
+
+  @ApiTags('Inquiry API')
   @ApiOperation({ summary: '문의 업데이트' })
   @Put('inquiry/:inquiryId')
   async updateInquiry(
@@ -156,7 +173,7 @@ export class AppController {
     const existingInquiry = await this.inquiryService.findInquiryById(numId);
     if (!existingInquiry) {
       throw new HttpException(
-        '해당 문의사항의 존재하지 않습니다.',
+        '해당 ID의 문의사항의 존재하지 않습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -177,7 +194,7 @@ export class AppController {
 
     if (!inquiryWithAnswer) {
       throw new HttpException(
-        '해당 문의사항이 존재하지 않습니다.',
+        '해당 ID의 문의사항이 존재하지 않습니다.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -204,7 +221,7 @@ export class AppController {
     const existingInquiry = await this.inquiryService.findInquiryById(numId);
     if (!existingInquiry) {
       throw new HttpException(
-        '해당 문의사항의 존재하지 않습니다.',
+        '해당 ID의 문의사항의 존재하지 않습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
