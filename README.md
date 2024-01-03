@@ -2,6 +2,9 @@
 
 이 프로젝트는 Nest, Prisma, PostgreSQL, Node.js, TypeScript를 사용하여 구현되었으며, Koyeb을 통해 배포되었습니다.
 
+![test drawio](https://github.com/zerosial/Question_Backend_Nest/assets/97251710/f3a83077-4cb6-4477-932f-dbde5a4b3646)
+
+
 ## 사용 기술
 
 - NestJS
