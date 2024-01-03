@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import expressBasicAuth from 'express-basic-auth';
 
 const port = process.env.PORT || 3000;
 console.log(
@@ -10,6 +11,17 @@ console.log(
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Swagger Auth (인증된 사용자만 접속)
+  app.use(
+    ['/api', '/api-json'],
+    expressBasicAuth({
+      challenge: true,
+      users: {
+        [process.env.SWAGGER_USER]: process.env.SWAGGER_PASSWORD,
+      },
+    }),
+  );
+
   // Swagger 설정
   const config = new DocumentBuilder()
     .setTitle('1:1 문의사항 API')
@@ -21,6 +33,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
   await app.listen(port);
