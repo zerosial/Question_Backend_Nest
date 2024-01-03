@@ -34,6 +34,9 @@ export class InquiryService {
           },
         },
       },
+      orderBy: {
+        registeredDate: 'asc',
+      },
     });
   }
 
@@ -53,6 +56,9 @@ export class InquiryService {
             answeredDate: true,
           },
         },
+      },
+      orderBy: {
+        registeredDate: 'asc',
       },
     });
   }
