@@ -43,7 +43,7 @@ export class AppController {
   }
 
   @ApiTags('User API')
-  @ApiOperation({ summary: '모든 사용자 조회' })
+  @ApiOperation({ summary: '사용자 조회 (All, Email)' })
   @ApiQuery({
     name: 'skip',
     required: false,
@@ -93,7 +93,7 @@ export class AppController {
   }
 
   @ApiTags('User API')
-  @ApiOperation({ summary: '사용자 삭제' })
+  @ApiOperation({ summary: 'Email - 사용자 삭제' })
   @Delete('user/:email')
   async deleteUser(@Param('email') email: string): Promise<UserModel> {
     const existingUser = await this.userService.user({
@@ -126,7 +126,7 @@ export class AppController {
   }
 
   @ApiTags('Inquiry API')
-  @ApiOperation({ summary: '이메일 기반 문의 조회' })
+  @ApiOperation({ summary: 'Email - 문의 조회' })
   @Get('inquiry/user')
   async getInquiriesByUserEmail(
     @Query() getInquiriesByEmailDto: GetInquiriesByEmailDto,
@@ -146,7 +146,7 @@ export class AppController {
   }
 
   @ApiTags('Inquiry API')
-  @ApiOperation({ summary: 'ID 기반 문의 조회' })
+  @ApiOperation({ summary: 'Inquiry ID - 문의 조회' })
   @Get('inquiry/:inquiryId')
   async findInquiryById(
     @Param('inquiryId') inquiryId: string,
@@ -163,7 +163,7 @@ export class AppController {
   }
 
   @ApiTags('Inquiry API')
-  @ApiOperation({ summary: '문의 업데이트' })
+  @ApiOperation({ summary: 'Inquiry ID - 문의 업데이트' })
   @Put('inquiry/:inquiryId')
   async updateInquiry(
     @Param('inquiryId') inquiryId: string,
@@ -181,7 +181,7 @@ export class AppController {
   }
 
   @ApiTags('Inquiry API')
-  @ApiOperation({ summary: '문의 삭제' })
+  @ApiOperation({ summary: 'Inquiry ID - 문의 삭제' })
   @Delete('inquiry/:inquiryId')
   async deleteInquiry(
     @Param('inquiryId') inquiryId: string,
@@ -210,7 +210,7 @@ export class AppController {
   }
 
   @ApiTags('Answer API')
-  @ApiOperation({ summary: '답변 생성' })
+  @ApiOperation({ summary: 'Inquiry ID - 답변 생성' })
   @ApiResponse({ status: 201, description: '답변 생성됨.' })
   @Post('answer/:inquiryId')
   async createAnswer(
@@ -230,7 +230,7 @@ export class AppController {
   }
 
   @ApiTags('Answer API')
-  @ApiOperation({ summary: '답변 삭제' })
+  @ApiOperation({ summary: 'Answer ID - 답변 삭제' })
   @ApiResponse({ status: 200, description: '답변 삭제됨.' })
   @Delete('answer/:answerId')
   async deleteAnswer(
