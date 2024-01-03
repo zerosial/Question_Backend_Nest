@@ -13,11 +13,12 @@
 
 ## Swagger 사용법 및 팁
 
-Swagger 문서는 다음 링크에서 확인하실 수 있습니다: [https://question-pineone.koyeb.app/api](https://question-pineone.koyeb.app/api)
+Swagger 문서는 다음 링크에서 확인하실 수 있습니다: https://question-pineone.koyeb.app/api
+![chrome_Nu8Rwk1fPh](https://github.com/zerosial/Question_Backend_Nest/assets/97251710/57cef970-d45f-4717-90d8-4cacdca5b8)
 
-하단 schema의 경우 body에 담는 내용을 표현하고 있습니다. (이미지와 같이 붉은 \*의 경우 필수값입니다. 기본적으로 생성시는 전체 정보가 필요하고 업데이트는 일부 정보만 있으면 됩니다.)
+하단 DTO의 경우 body에 담는 내용을 표현하고 있습니다. (이미지와 같이 붉은 \*의 경우 필수값입니다. 기본적으로 생성시는 전체 정보가 필요하고 업데이트는 일부 정보만 있으면 됩니다.)
 
-각 API에 사용되는 schema는 해당 부분 선택 시 볼 수 있습니다.
+각 API에 사용되는 DTO의는 해당 부분 선택 시 볼 수 있습니다.
 
 요청하는 방식은 다음과 같습니다:
 
@@ -54,9 +55,7 @@ Swagger 문서는 다음 링크에서 확인하실 수 있습니다: [https://qu
 
 오류가 발생하거나 문제가 있을 경우 알려주세요.
 
-![Swagger UI](images/swagger-ui.png)
-
-## API 라우트
+## API Route
 
 - User API
   - GET /users: 모든 사용자 조회
