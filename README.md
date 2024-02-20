@@ -19,8 +19,9 @@ Swagger 문서는 다음 링크에서 확인하실 수 있습니다: https://que
 
 ![chrome_Nu8Rwk1fPh](https://github.com/zerosial/Question_Backend_Nest/assets/97251710/8eea9912-42a9-4c15-ad97-efff6e585d61)
 
-ID : admin
-Pass : admin01!
+**ID : admin
+
+Pass : admin01!**
 
 하단 DTO의 경우 body에 담는 내용을 표현하고 있습니다. (이미지와 같이 붉은 \*의 경우 필수값입니다. 기본적으로 생성시는 전체 정보가 필요하고 업데이트는 일부 정보만 있으면 됩니다.)
 
